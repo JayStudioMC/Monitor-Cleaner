@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Cleaner - あなたのデスクトップがきれいに！</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --surface: rgba(30, 30, 46, 0.7);
+            --primary: #89b4fa;
+            --accent: #f38ba8;
+            --text: #cdd6f4;
+            --text-dim: #a6adc8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景のアニメーション */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(137, 180, 250, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(243, 139, 168, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(11, 14, 20, 0.5);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            background: linear-gradient(to bottom, transparent, var(--bg)), url('monitor_cleaner_hero_1778842379123.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--primary);
+            color: var(--bg);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(137, 180, 250, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(137, 180, 250, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .price-section {
+            text-align: center;
+            background: var(--glass);
+            padding: 4rem;
+            border-radius: 30px;
+            border: 2px solid var(--primary);
+            margin-top: 4rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-dim);
+            font-size: 1.5rem;
+        }
+
+        .current-price {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        .discount-info {
+            background: rgba(243, 139, 168, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px dashed var(--accent);
+        }
+
+        .x-share-btn {
+            background: #000;
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            transition: 0.3s;
+        }
+
+        .x-share-btn:hover {
+            background: #333;
+        }
+
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .section { padding: 4rem 1.5rem; }
+        }
+
+        /* マイクロアニメーション */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .logo img { animation: float 3s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <header>
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="14" stroke="#89B4FA" stroke-width="4"/>
+                <path d="M10 16L14 20L22 12" stroke="#89B4FA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Monitor Cleaner
+        </div>
+        <nav>
+            <a href="#features" style="color: var(--text); text-decoration: none; margin-right: 20px;">Features</a>
+            <a href="#pricing" class="btn" style="padding: 0.5rem 1.5rem;">Download</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>あなたのデスクトップが、きれいに。</h1>
+            <p class="tagline">マルチモニターの「散らかり」を、スマートに解消する。</p>
+            <a href="#pricing" class="btn">今すぐダウンロード（無料版あり）</a>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <h2 style="text-align: center; font-size: 2.5rem;">Features</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>🖼 スタイリッシュなデスクトップへ</h3>
+                <p>モニターからマウスが離れると、一定時間後にそのモニターにあるウィンドウを自動最小化。雑多なデスクトップから卒業できます。好きな壁紙を設定したけどウィンドウが邪魔で見えない方にもピッタリ。</p>
+            </div>
+            <div class="card">
+                <h3>🛡 便利な除外機能</h3>
+                <p>資料や動画再生、フルスクリーンのウィンドウなど自動的に最小化したら困るものは設定から除外できます。不要なウィンドウのみを最小化してスマートなデスクトップに</p>
+            </div>
+            <div class="card">
+                <h3>🧠 スマートな操作検知</h3>
+                <p>PCを離れたら全モニターをクリーンアップ。急な離席でもデスクトップのプライバシーをスマートに守ります。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section">
+        <div class="price-section">
+            <h2 style="margin-bottom: 1rem;">ライセンスプラン</h2>
+            <p style="margin-bottom: 3rem;">基本機能は永久無料。高度なカスタマイズはPro版で。</p>
+            
+            <div class="discount-info">
+                🚀 ポスト割引実施中！<br>
+                下のボタンからXで紹介ポストをすると、Pro版が特別価格になります。
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <a href="https://twitter.com/intent/tweet?text=デスクトップの壁紙がいつでもきれいに見える神ツール「Monitor Cleaner」を使ってみた！%0ahttps://your-booth-url.booth.pm" class="x-share-btn" target="_blank">
+                    𝕏 でポストして割引を受ける
+                </a>
+            </div>
+
+            <div class="original-price">通常価格 800円</div>
+            <div class="current-price" id="price">500<span style="font-size: 1.5rem;">円</span></div>
+            
+            <a href="https://your-booth-url.booth.pm" class="btn" style="background: var(--accent); color: white; padding: 1.5rem 4rem; font-size: 1.2rem;">
+                BOOTHで購入する
+            </a>
+
+            <div style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-dim);">
+                ※無料版は設定画面からいつでもダウンロード可能です。
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Monitor Cleaner Project. Designed by Jay.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">あなたの壁紙に、もっと自由を。</p>
+    </footer>
+
+    <script>
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 簡易的なアニメーション（スクロールでフェードイン）
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
